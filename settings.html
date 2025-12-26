@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Auto Countdown - Paramètres</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            padding: 16px;
+            margin: 0;
+            background: #1d2125;
+            color: #b6c2cf;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        h3 {
+            margin: 0 0 16px 0;
+            color: #fff;
+            font-size: 16px;
+            border-bottom: 1px solid #3d444d;
+            padding-bottom: 8px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-weight: 600;
+            color: #9fadbc;
+            margin-bottom: 10px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+        .row label {
+            flex: 1;
+            color: #b6c2cf;
+        }
+        .color-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        input[type="number"] {
+            width: 70px;
+            padding: 6px 10px;
+            border: 1px solid #3d444d;
+            border-radius: 4px;
+            background: #22272b;
+            color: #b6c2cf;
+            font-size: 14px;
+        }
+        input[type="text"] {
+            width: 120px;
+            padding: 6px 10px;
+            border: 1px solid #3d444d;
+            border-radius: 4px;
+            background: #22272b;
+            color: #b6c2cf;
+            font-size: 14px;
+        }
+        select {
+            padding: 6px 10px;
+            border: 1px solid #3d444d;
+            border-radius: 4px;
+            background: #22272b;
+            color: #b6c2cf;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .color-select {
+            width: 100px;
+        }
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .btn-primary {
+            background: #579dff;
+            color: #1d2125;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn-primary:hover {
+            background: #85b8ff;
+        }
+        .btn-secondary {
+            background: #3d444d;
+            color: #b6c2cf;
+            width: 100%;
+            margin-top: 8px;
+        }
+        .btn-secondary:hover {
+            background: #4d555e;
+        }
+        .success-message {
+            background: #1f6f4a;
+            color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+        .format-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border: 1px solid #3d444d;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .format-option:hover {
+            border-color: #579dff;
+        }
+        .format-option.selected {
+            border-color: #579dff;
+            background: rgba(87, 157, 255, 0.1);
+        }
+        .format-option input {
+            margin: 0;
+        }
+        .format-example {
+            color: #8c9bab;
+            font-size: 12px;
+        }
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+        }
+        .tab {
+            padding: 8px 12px;
+            background: #22272b;
+            border: 1px solid #3d444d;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #9fadbc;
+        }
+        .tab.active {
+            background: #579dff;
+            color: #1d2125;
+            border-color: #579dff;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h3>⏱️ Paramètres Auto Countdown</h3>
+    
+    <div class="tabs">
+        <div class="tab active" data-tab="colors">🎨 Couleurs</div>
+        <div class="tab" data-tab="thresholds">⏰ Seuils</div>
+        <div class="tab" data-tab="texts">✏️ Textes</div>
+    </div>
+
+    <!-- Onglet Couleurs -->
+    <div id="tab-colors" class="tab-content active">
+        <div class="section">
+            <div class="section-title">Couleurs par statut</div>
+            
+            <div class="row">
+                <label><span class="color-dot" id="dot-overdue"></span>En retard</label>
+                <select id="color-overdue" class="color-select">
+                    <option value="red">🔴 Rouge</option>
+                    <option value="orange">🟠 Orange</option>
+                    <option value="yellow">🟡 Jaune</option>
+                    <option value="blue">🔵 Bleu</option>
+                    <option value="green">🟢 Vert</option>
+                    <option value="purple">🟣 Violet</option>
+                    <option value="pink">💗 Rose</option>
+                    <option value="sky">🩵 Cyan</option>
+                </select>
+            </div>
+            
+            <div class="row">
+                <label><span class="color-dot" id="dot-urgent"></span>Urgent</label>
+                <select id="color-urgent" class="color-select">
+                    <option value="red">🔴 Rouge</option>
+                    <option value="orange">🟠 Orange</option>
+                    <option value="yellow">🟡 Jaune</option>
+                    <option value="blue">🔵 Bleu</option>
+                    <option value="green">🟢 Vert</option>
+                    <option value="purple">🟣 Violet</option>
+                    <option value="pink">💗 Rose</option>
+                    <option value="sky">🩵 Cyan</option>
+                </select>
+            </div>
+            
+            <div class="row">
+                <label><span class="color-dot" id="dot-warning"></span>Attention</label>
+                <select id="color-warning" class="color-select">
+                    <option value="red">🔴 Rouge</option>
+                    <option value="orange">🟠 Orange</option>
+                    <option value="yellow">🟡 Jaune</option>
+                    <option value="blue">🔵 Bleu</option>
+                    <option value="green">🟢 Vert</option>
+                    <option value="purple">🟣 Violet</option>
+                    <option value="pink">💗 Rose</option>
+                    <option value="sky">🩵 Cyan</option>
+                </select>
+            </div>
+            
+            <div class="row">
+                <label><span class="color-dot" id="dot-normal"></span>Normal</label>
+                <select id="color-normal" class="color-select">
+                    <option value="red">🔴 Rouge</option>
+                    <option value="orange">🟠 Orange</option>
+                    <option value="yellow">🟡 Jaune</option>
+                    <option value="blue">🔵 Bleu</option>
+                    <option value="green">🟢 Vert</option>
+                    <option value="purple">🟣 Violet</option>
+                    <option value="pink">💗 Rose</option>
+                    <option value="sky">🩵 Cyan</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onglet Seuils -->
+    <div id="tab-thresholds" class="tab-content">
+        <div class="section">
+            <div class="section-title">Seuils de temps (en heures)</div>
+            
+            <div class="row">
+                <label>🟠 Urgent si moins de</label>
+                <input type="number" id="threshold-urgent" min="1" max="720"> h
+            </div>
+            
+            <div class="row">
+                <label>🟡 Attention si moins de</label>
+                <input type="number" id="threshold-warning" min="1" max="720"> h
+            </div>
+            
+            <div class="section-title" style="margin-top: 16px;">Format d'affichage</div>
+            
+            <div class="format-option" data-format="long">
+                <input type="radio" name="format" value="long" id="format-long">
+                <div>
+                    <label for="format-long">Format long</label>
+                    <div class="format-example">Ex: 2 jours 5 heures</div>
+                </div>
+            </div>
+            
+            <div class="format-option" data-format="short">
+                <input type="radio" name="format" value="short" id="format-short">
+                <div>
+                    <label for="format-short">Format court</label>
+                    <div class="format-example">Ex: 2j 5h</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onglet Textes -->
+    <div id="tab-texts" class="tab-content">
+        <div class="section">
+            <div class="section-title">Textes de statut</div>
+            
+            <div class="row">
+                <label>En retard</label>
+                <input type="text" id="text-overdue" placeholder="En retard de">
+            </div>
+            
+            <div class="row">
+                <label>Urgent</label>
+                <input type="text" id="text-urgent" placeholder="Urgent">
+            </div>
+            
+            <div class="row">
+                <label>Attention</label>
+                <input type="text" id="text-warning" placeholder="Attention">
+            </div>
+            
+            <div class="row">
+                <label>Normal</label>
+                <input type="text" id="text-normal" placeholder="Reste">
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">Unités de temps</div>
+            
+            <div class="row">
+                <label>Jour (singulier)</label>
+                <input type="text" id="text-days" placeholder="jour">
+            </div>
+            
+            <div class="row">
+                <label>Jours (pluriel)</label>
+                <input type="text" id="text-daysPlural" placeholder="jours">
+            </div>
+            
+            <div class="row">
+                <label>Heure (singulier)</label>
+                <input type="text" id="text-hours" placeholder="heure">
+            </div>
+            
+            <div class="row">
+                <label>Heures (pluriel)</label>
+                <input type="text" id="text-hoursPlural" placeholder="heures">
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" id="save-btn">💾 Enregistrer</button>
+    <button class="btn btn-secondary" id="reset-btn">🔄 Réinitialiser par défaut</button>
+    
+    <div class="success-message" id="success-message">✅ Paramètres enregistrés !</div>
+
+    <script src="https://p.trellocdn.com/power-up.min.js"></script>
+    <script>
+        var t = TrelloPowerUp.iframe();
+        
+        // Paramètres par défaut
+        var DEFAULT_SETTINGS = {
+            thresholds: {
+                urgent: 24,
+                warning: 72
+            },
+            colors: {
+                overdue: 'red',
+                urgent: 'orange',
+                warning: 'yellow',
+                normal: 'blue'
+            },
+            texts: {
+                overdue: 'En retard de',
+                urgent: 'Urgent',
+                warning: 'Attention',
+                normal: 'Reste',
+                days: 'jour',
+                daysPlural: 'jours',
+                hours: 'heure',
+                hoursPlural: 'heures',
+                minutes: 'minute',
+                minutesPlural: 'minutes'
+            },
+            format: 'long'
+        };
+        
+        // Couleurs CSS correspondantes
+        var colorCSS = {
+            red: '#f87168',
+            orange: '#faa53d',
+            yellow: '#f5cd47',
+            blue: '#579dff',
+            green: '#4bce97',
+            purple: '#9f8fef',
+            pink: '#e774bb',
+            sky: '#6cc3e0'
+        };
+        
+        // Mettre à jour les points de couleur
+        function updateColorDots() {
+            document.getElementById('dot-overdue').style.background = colorCSS[document.getElementById('color-overdue').value];
+            document.getElementById('dot-urgent').style.background = colorCSS[document.getElementById('color-urgent').value];
+            document.getElementById('dot-warning').style.background = colorCSS[document.getElementById('color-warning').value];
+            document.getElementById('dot-normal').style.background = colorCSS[document.getElementById('color-normal').value];
+        }
+        
+        // Charger les paramètres
+        function loadSettings() {
+            t.get('board', 'shared', 'countdownSettings')
+                .then(function(settings) {
+                    settings = settings || DEFAULT_SETTINGS;
+                    
+                    // Couleurs
+                    document.getElementById('color-overdue').value = settings.colors?.overdue || 'red';
+                    document.getElementById('color-urgent').value = settings.colors?.urgent || 'orange';
+                    document.getElementById('color-warning').value = settings.colors?.warning || 'yellow';
+                    document.getElementById('color-normal').value = settings.colors?.normal || 'blue';
+                    
+                    // Seuils
+                    document.getElementById('threshold-urgent').value = settings.thresholds?.urgent || 24;
+                    document.getElementById('threshold-warning').value = settings.thresholds?.warning || 72;
+                    
+                    // Format
+                    var format = settings.format || 'long';
+                    document.getElementById('format-' + format).checked = true;
+                    document.querySelector('.format-option[data-format="' + format + '"]').classList.add('selected');
+                    
+                    // Textes
+                    document.getElementById('text-overdue').value = settings.texts?.overdue || 'En retard de';
+                    document.getElementById('text-urgent').value = settings.texts?.urgent || 'Urgent';
+                    document.getElementById('text-warning').value = settings.texts?.warning || 'Attention';
+                    document.getElementById('text-normal').value = settings.texts?.normal || 'Reste';
+                    document.getElementById('text-days').value = settings.texts?.days || 'jour';
+                    document.getElementById('text-daysPlural').value = settings.texts?.daysPlural || 'jours';
+                    document.getElementById('text-hours').value = settings.texts?.hours || 'heure';
+                    document.getElementById('text-hoursPlural').value = settings.texts?.hoursPlural || 'heures';
+                    
+                    updateColorDots();
+                });
+        }
+        
+        // Sauvegarder les paramètres
+        function saveSettings() {
+            var settings = {
+                thresholds: {
+                    urgent: parseInt(document.getElementById('threshold-urgent').value) || 24,
+                    warning: parseInt(document.getElementById('threshold-warning').value) || 72
+                },
+                colors: {
+                    overdue: document.getElementById('color-overdue').value,
+                    urgent: document.getElementById('color-urgent').value,
+                    warning: document.getElementById('color-warning').value,
+                    normal: document.getElementById('color-normal').value
+                },
+                texts: {
+                    overdue: document.getElementById('text-overdue').value || 'En retard de',
+                    urgent: document.getElementById('text-urgent').value || 'Urgent',
+                    warning: document.getElementById('text-warning').value || 'Attention',
+                    normal: document.getElementById('text-normal').value || 'Reste',
+                    days: document.getElementById('text-days').value || 'jour',
+                    daysPlural: document.getElementById('text-daysPlural').value || 'jours',
+                    hours: document.getElementById('text-hours').value || 'heure',
+                    hoursPlural: document.getElementById('text-hoursPlural').value || 'heures',
+                    minutes: 'minute',
+                    minutesPlural: 'minutes'
+                },
+                format: document.querySelector('input[name="format"]:checked').value
+            };
+            
+            t.set('board', 'shared', 'countdownSettings', settings)
+                .then(function() {
+                    var msg = document.getElementById('success-message');
+                    msg.style.display = 'block';
+                    setTimeout(function() {
+                        msg.style.display = 'none';
+                    }, 2000);
+                });
+        }
+        
+        // Réinitialiser les paramètres
+        function resetSettings() {
+            t.set('board', 'shared', 'countdownSettings', DEFAULT_SETTINGS)
+                .then(function() {
+                    loadSettings();
+                    var msg = document.getElementById('success-message');
+                    msg.textContent = '✅ Paramètres réinitialisés !';
+                    msg.style.display = 'block';
+                    setTimeout(function() {
+                        msg.style.display = 'none';
+                        msg.textContent = '✅ Paramètres enregistrés !';
+                    }, 2000);
+                });
+        }
+        
+        // Gestion des onglets
+        document.querySelectorAll('.tab').forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+                document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+                
+                this.classList.add('active');
+                document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+                
+                t.sizeTo('body').done();
+            });
+        });
+        
+        // Gestion des options de format
+        document.querySelectorAll('.format-option').forEach(function(option) {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.format-option').forEach(function(o) { o.classList.remove('selected'); });
+                this.classList.add('selected');
+                this.querySelector('input').checked = true;
+            });
+        });
+        
+        // Gestion des changements de couleur
+        document.querySelectorAll('.color-select').forEach(function(select) {
+            select.addEventListener('change', updateColorDots);
+        });
+        
+        // Événements des boutons
+        document.getElementById('save-btn').addEventListener('click', saveSettings);
+        document.getElementById('reset-btn').addEventListener('click', resetSettings);
+        
+        // Initialisation
+        t.render(function() {
+            loadSettings();
+            t.sizeTo('body').done();
+        });
+    </script>
+</body>
+</html>

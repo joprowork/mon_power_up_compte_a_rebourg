@@ -1,53 +1,131 @@
-// Auto Countdown Power-Up for Trello
-// Affiche automatiquement un countdown sur toutes les cartes avec une date d'échéance
+// Auto Countdown Power-Up pour Trello - Version 2.0
+// Avec paramètres personnalisables
+
+// Paramètres par défaut
+var DEFAULT_SETTINGS = {
+    // Seuils en heures
+    thresholds: {
+        urgent: 24,      // Moins de 24h → couleur urgente
+        warning: 72,     // Moins de 72h (3 jours) → couleur warning
+        normal: 168      // Moins de 168h (7 jours) → couleur normale
+    },
+    // Couleurs (red, orange, yellow, blue, green, purple, pink, sky, lime)
+    colors: {
+        overdue: 'red',      // En retard
+        urgent: 'orange',    // Urgent
+        warning: 'yellow',   // Attention
+        normal: 'blue'       // Normal
+    },
+    // Textes de statut
+    texts: {
+        overdue: 'En retard de',
+        urgent: 'Urgent',
+        warning: 'Attention',
+        normal: 'Reste',
+        days: 'jour',
+        daysPlural: 'jours',
+        hours: 'heure',
+        hoursPlural: 'heures',
+        minutes: 'minute',
+        minutesPlural: 'minutes'
+    },
+    // Format d'affichage : 'short' (1j 5h) ou 'long' (1 jour 5 heures)
+    format: 'long'
+};
+
+// Récupérer les paramètres sauvegardés ou utiliser les défauts
+function getSettings(t) {
+    return t.get('board', 'shared', 'countdownSettings')
+        .then(function(settings) {
+            if (settings) {
+                // Fusionner avec les défauts pour s'assurer que toutes les clés existent
+                return Object.assign({}, DEFAULT_SETTINGS, settings);
+            }
+            return DEFAULT_SETTINGS;
+        });
+}
 
 // Fonction pour calculer le temps restant
 function getTimeRemaining(dueDate) {
-    const now = new Date();
-    const due = new Date(dueDate);
-    const diff = due - now;
+    var now = new Date();
+    var due = new Date(dueDate);
+    var diff = due - now;
     
-    const isPast = diff < 0;
-    const absDiff = Math.abs(diff);
+    var isPast = diff < 0;
+    var absDiff = Math.abs(diff);
     
-    const days = Math.floor(absDiff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((absDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((absDiff % (1000 * 60 * 60)) / (1000 * 60));
+    var days = Math.floor(absDiff / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((absDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((absDiff % (1000 * 60 * 60)) / (1000 * 60));
     
-    return { days, hours, minutes, isPast, totalMs: diff };
+    return { days: days, hours: hours, minutes: minutes, isPast: isPast, totalMs: diff };
 }
 
-// Fonction pour formater le texte du countdown
-function formatCountdown(timeRemaining) {
-    const { days, hours, minutes, isPast } = timeRemaining;
-    const prefix = isPast ? '-' : '';
+// Fonction pour formater le texte du countdown (version courte pour badge)
+function formatCountdownShort(timeRemaining, settings) {
+    var days = timeRemaining.days;
+    var hours = timeRemaining.hours;
+    var minutes = timeRemaining.minutes;
+    var isPast = timeRemaining.isPast;
+    var prefix = isPast ? '-' : '';
     
-    if (days > 0) {
-        return `${prefix}${days}j ${hours}h`;
-    } else if (hours > 0) {
-        return `${prefix}${hours}h ${minutes}m`;
+    if (settings.format === 'long') {
+        if (days > 0) {
+            var dayText = days === 1 ? settings.texts.days : settings.texts.daysPlural;
+            var hourText = hours === 1 ? settings.texts.hours : settings.texts.hoursPlural;
+            return prefix + days + ' ' + dayText + ' ' + hours + ' ' + hourText;
+        } else if (hours > 0) {
+            var hourText = hours === 1 ? settings.texts.hours : settings.texts.hoursPlural;
+            var minText = minutes === 1 ? settings.texts.minutes : settings.texts.minutesPlural;
+            return prefix + hours + ' ' + hourText + ' ' + minutes + ' ' + minText;
+        } else {
+            var minText = minutes === 1 ? settings.texts.minutes : settings.texts.minutesPlural;
+            return prefix + minutes + ' ' + minText;
+        }
     } else {
-        return `${prefix}${minutes}m`;
+        // Format court
+        if (days > 0) {
+            return prefix + days + 'j ' + hours + 'h';
+        } else if (hours > 0) {
+            return prefix + hours + 'h ' + minutes + 'm';
+        } else {
+            return prefix + minutes + 'm';
+        }
     }
 }
 
-// Fonction pour déterminer la couleur selon l'urgence
-function getColor(timeRemaining) {
-    const { totalMs } = timeRemaining;
-    const hoursRemaining = totalMs / (1000 * 60 * 60);
+// Fonction pour formater le texte détaillé
+function formatCountdownLong(timeRemaining, settings) {
+    var days = timeRemaining.days;
+    var hours = timeRemaining.hours;
+    var minutes = timeRemaining.minutes;
+    
+    var dayText = days === 1 ? settings.texts.days : settings.texts.daysPlural;
+    var hourText = hours === 1 ? settings.texts.hours : settings.texts.hoursPlural;
+    var minText = minutes === 1 ? settings.texts.minutes : settings.texts.minutesPlural;
+    
+    if (days > 0) {
+        return days + ' ' + dayText + ', ' + hours + ' ' + hourText + ', ' + minutes + ' ' + minText;
+    } else if (hours > 0) {
+        return hours + ' ' + hourText + ', ' + minutes + ' ' + minText;
+    } else {
+        return minutes + ' ' + minText;
+    }
+}
+
+// Fonction pour déterminer la couleur et le statut selon l'urgence
+function getColorAndStatus(timeRemaining, settings) {
+    var totalMs = timeRemaining.totalMs;
+    var hoursRemaining = totalMs / (1000 * 60 * 60);
     
     if (totalMs < 0) {
-        // En retard - Rouge
-        return 'red';
-    } else if (hoursRemaining <= 24) {
-        // Moins de 24h - Orange
-        return 'orange';
-    } else if (hoursRemaining <= 72) {
-        // Moins de 3 jours - Jaune
-        return 'yellow';
+        return { color: settings.colors.overdue, status: settings.texts.overdue };
+    } else if (hoursRemaining <= settings.thresholds.urgent) {
+        return { color: settings.colors.urgent, status: settings.texts.urgent };
+    } else if (hoursRemaining <= settings.thresholds.warning) {
+        return { color: settings.colors.warning, status: settings.texts.warning };
     } else {
-        // Plus de 3 jours - Bleu
-        return 'blue';
+        return { color: settings.colors.normal, status: settings.texts.normal };
     }
 }
 
@@ -55,58 +133,58 @@ function getColor(timeRemaining) {
 TrelloPowerUp.initialize({
     // Badge sur les cartes (vue tableau)
     'card-badges': function(t, options) {
-        return t.card('due', 'dueComplete')
-            .then(function(card) {
-                // Si pas de date d'échéance ou tâche terminée, pas de badge
-                if (!card.due || card.dueComplete) {
-                    return [];
-                }
-                
-                const timeRemaining = getTimeRemaining(card.due);
-                const text = formatCountdown(timeRemaining);
-                const color = getColor(timeRemaining);
-                
-                return [{
-                    text: text,
-                    color: color,
-                    refresh: 60 // Rafraîchir toutes les 60 secondes
-                }];
-            });
+        return Promise.all([
+            t.card('due', 'dueComplete'),
+            getSettings(t)
+        ]).then(function(results) {
+            var card = results[0];
+            var settings = results[1];
+            
+            if (!card.due || card.dueComplete) {
+                return [];
+            }
+            
+            var timeRemaining = getTimeRemaining(card.due);
+            var text = formatCountdownShort(timeRemaining, settings);
+            var colorAndStatus = getColorAndStatus(timeRemaining, settings);
+            
+            return [{
+                text: text,
+                color: colorAndStatus.color,
+                refresh: 60
+            }];
+        });
     },
     
     // Badge détaillé (vue carte ouverte)
     'card-detail-badges': function(t, options) {
-        return t.card('due', 'dueComplete')
-            .then(function(card) {
-                if (!card.due || card.dueComplete) {
-                    return [];
-                }
-                
-                const timeRemaining = getTimeRemaining(card.due);
-                const { days, hours, minutes, isPast } = timeRemaining;
-                const color = getColor(timeRemaining);
-                
-                let title = isPast ? '⏰ En retard de' : '⏱️ Reste';
-                let text;
-                
-                if (days > 0) {
-                    text = `${days} jour${days > 1 ? 's' : ''}, ${hours}h ${minutes}m`;
-                } else if (hours > 0) {
-                    text = `${hours} heure${hours > 1 ? 's' : ''}, ${minutes}m`;
-                } else {
-                    text = `${minutes} minute${minutes > 1 ? 's' : ''}`;
-                }
-                
-                return [{
-                    title: title,
-                    text: text,
-                    color: color,
-                    refresh: 30 // Rafraîchir toutes les 30 secondes
-                }];
-            });
+        return Promise.all([
+            t.card('due', 'dueComplete'),
+            getSettings(t)
+        ]).then(function(results) {
+            var card = results[0];
+            var settings = results[1];
+            
+            if (!card.due || card.dueComplete) {
+                return [];
+            }
+            
+            var timeRemaining = getTimeRemaining(card.due);
+            var colorAndStatus = getColorAndStatus(timeRemaining, settings);
+            var text = formatCountdownLong(timeRemaining, settings);
+            
+            var icon = timeRemaining.isPast ? '⏰' : '⏱️';
+            
+            return [{
+                title: icon + ' ' + colorAndStatus.status,
+                text: text,
+                color: colorAndStatus.color,
+                refresh: 30
+            }];
+        });
     },
     
-    // Bouton sur le tableau pour info
+    // Bouton sur le tableau pour les paramètres
     'board-buttons': function(t, options) {
         return [{
             icon: {
@@ -116,9 +194,9 @@ TrelloPowerUp.initialize({
             text: 'Auto Countdown',
             callback: function(t) {
                 return t.popup({
-                    title: 'Auto Countdown',
-                    url: 'info.html',
-                    height: 200
+                    title: '⏱️ Auto Countdown - Paramètres',
+                    url: 'settings.html',
+                    height: 500
                 });
             }
         }];
