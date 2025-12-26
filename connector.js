@@ -1,5 +1,5 @@
-// Auto Countdown Power-Up pour Trello - Version 2.0
-// Avec paramètres personnalisables
+// Auto Countdown Power-Up pour Trello - Version 3.0
+// Avec badge EN RETARD configurable
 
 // Paramètres par défaut
 var DEFAULT_SETTINGS = {
@@ -30,7 +30,13 @@ var DEFAULT_SETTINGS = {
         minutesPlural: 'minutes'
     },
     // Format d'affichage : 'short' (1j 5h) ou 'long' (1 jour 5 heures)
-    format: 'long'
+    format: 'long',
+    // Badge EN RETARD
+    overdueAlert: {
+        enabled: true,
+        text: '⚠️ EN RETARD',
+        color: 'red'
+    }
 };
 
 // Récupérer les paramètres sauvegardés ou utiliser les défauts
@@ -39,7 +45,12 @@ function getSettings(t) {
         .then(function(settings) {
             if (settings) {
                 // Fusionner avec les défauts pour s'assurer que toutes les clés existent
-                return Object.assign({}, DEFAULT_SETTINGS, settings);
+                var merged = Object.assign({}, DEFAULT_SETTINGS, settings);
+                merged.thresholds = Object.assign({}, DEFAULT_SETTINGS.thresholds, settings.thresholds);
+                merged.colors = Object.assign({}, DEFAULT_SETTINGS.colors, settings.colors);
+                merged.texts = Object.assign({}, DEFAULT_SETTINGS.texts, settings.texts);
+                merged.overdueAlert = Object.assign({}, DEFAULT_SETTINGS.overdueAlert, settings.overdueAlert);
+                return merged;
             }
             return DEFAULT_SETTINGS;
         });
@@ -119,13 +130,13 @@ function getColorAndStatus(timeRemaining, settings) {
     var hoursRemaining = totalMs / (1000 * 60 * 60);
     
     if (totalMs < 0) {
-        return { color: settings.colors.overdue, status: settings.texts.overdue };
+        return { color: settings.colors.overdue, status: settings.texts.overdue, isOverdue: true };
     } else if (hoursRemaining <= settings.thresholds.urgent) {
-        return { color: settings.colors.urgent, status: settings.texts.urgent };
+        return { color: settings.colors.urgent, status: settings.texts.urgent, isOverdue: false };
     } else if (hoursRemaining <= settings.thresholds.warning) {
-        return { color: settings.colors.warning, status: settings.texts.warning };
+        return { color: settings.colors.warning, status: settings.texts.warning, isOverdue: false };
     } else {
-        return { color: settings.colors.normal, status: settings.texts.normal };
+        return { color: settings.colors.normal, status: settings.texts.normal, isOverdue: false };
     }
 }
 
@@ -148,11 +159,25 @@ TrelloPowerUp.initialize({
             var text = formatCountdownShort(timeRemaining, settings);
             var colorAndStatus = getColorAndStatus(timeRemaining, settings);
             
-            return [{
+            var badges = [];
+            
+            // Ajouter le badge EN RETARD si activé et en retard
+            if (colorAndStatus.isOverdue && settings.overdueAlert && settings.overdueAlert.enabled) {
+                badges.push({
+                    text: settings.overdueAlert.text,
+                    color: settings.overdueAlert.color,
+                    refresh: 60
+                });
+            }
+            
+            // Ajouter le badge countdown
+            badges.push({
                 text: text,
                 color: colorAndStatus.color,
                 refresh: 60
-            }];
+            });
+            
+            return badges;
         });
     },
     
@@ -173,14 +198,28 @@ TrelloPowerUp.initialize({
             var colorAndStatus = getColorAndStatus(timeRemaining, settings);
             var text = formatCountdownLong(timeRemaining, settings);
             
+            var badges = [];
+            
+            // Ajouter le badge EN RETARD si activé et en retard
+            if (colorAndStatus.isOverdue && settings.overdueAlert && settings.overdueAlert.enabled) {
+                badges.push({
+                    title: '🚨 Alerte',
+                    text: settings.overdueAlert.text,
+                    color: settings.overdueAlert.color,
+                    refresh: 30
+                });
+            }
+            
             var icon = timeRemaining.isPast ? '⏰' : '⏱️';
             
-            return [{
+            badges.push({
                 title: icon + ' ' + colorAndStatus.status,
                 text: text,
                 color: colorAndStatus.color,
                 refresh: 30
-            }];
+            });
+            
+            return badges;
         });
     },
     
@@ -196,7 +235,7 @@ TrelloPowerUp.initialize({
                 return t.popup({
                     title: '⏱️ Auto Countdown - Paramètres',
                     url: 'settings.html',
-                    height: 500
+                    height: 550
                 });
             }
         }];
