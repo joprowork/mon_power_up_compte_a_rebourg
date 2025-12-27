@@ -182,7 +182,7 @@
     <h3>⏱️ Auto Countdown v4</h3>
     
     <div class="info-box">
-        ✅ Version 4 : Affichage cohérent entre vue tableau et vue détails
+        ✅ Version 4 avec couleurs vives (red_dark, orange_dark, etc.) - Testez si elles fonctionnent !
     </div>
     
     <div class="tabs">
@@ -219,10 +219,15 @@
                 <div class="row">
                     <span class="color-dot" id="dot-alert"></span>
                     <select id="alert-color" class="color-select">
+                        <option value="red_dark">🔴 Rouge vif</option>
                         <option value="red">🔴 Rouge</option>
+                        <option value="orange_dark">🟠 Orange vif</option>
                         <option value="orange">🟠 Orange</option>
+                        <option value="yellow_dark">🟡 Jaune vif</option>
                         <option value="yellow">🟡 Jaune</option>
+                        <option value="pink_dark">💗 Rose vif</option>
                         <option value="pink">💗 Rose</option>
+                        <option value="purple_dark">🟣 Violet vif</option>
                         <option value="purple">🟣 Violet</option>
                     </select>
                 </div>
@@ -243,13 +248,19 @@
             <div class="row">
                 <label><span class="color-dot" id="dot-overdue"></span>En retard</label>
                 <select id="color-overdue" class="color-select">
+                    <option value="red_dark">🔴 Rouge vif</option>
                     <option value="red">🔴 Rouge</option>
+                    <option value="red_light">🔴 Rouge clair</option>
+                    <option value="orange_dark">🟠 Orange vif</option>
                     <option value="orange">🟠 Orange</option>
+                    <option value="yellow_dark">🟡 Jaune vif</option>
                     <option value="yellow">🟡 Jaune</option>
+                    <option value="pink_dark">💗 Rose vif</option>
+                    <option value="pink">💗 Rose</option>
+                    <option value="purple_dark">🟣 Violet vif</option>
+                    <option value="purple">🟣 Violet</option>
                     <option value="blue">🔵 Bleu</option>
                     <option value="green">🟢 Vert</option>
-                    <option value="purple">🟣 Violet</option>
-                    <option value="pink">💗 Rose</option>
                     <option value="sky">🩵 Cyan</option>
                 </select>
             </div>
@@ -257,13 +268,18 @@
             <div class="row">
                 <label><span class="color-dot" id="dot-urgent"></span>Urgent (< 24h)</label>
                 <select id="color-urgent" class="color-select">
+                    <option value="red_dark">🔴 Rouge vif</option>
                     <option value="red">🔴 Rouge</option>
-                    <option value="orange" selected>🟠 Orange</option>
+                    <option value="orange_dark" selected>🟠 Orange vif</option>
+                    <option value="orange">🟠 Orange</option>
+                    <option value="yellow_dark">🟡 Jaune vif</option>
                     <option value="yellow">🟡 Jaune</option>
+                    <option value="pink_dark">💗 Rose vif</option>
+                    <option value="pink">💗 Rose</option>
+                    <option value="purple_dark">🟣 Violet vif</option>
+                    <option value="purple">🟣 Violet</option>
                     <option value="blue">🔵 Bleu</option>
                     <option value="green">🟢 Vert</option>
-                    <option value="purple">🟣 Violet</option>
-                    <option value="pink">💗 Rose</option>
                     <option value="sky">🩵 Cyan</option>
                 </select>
             </div>
@@ -271,13 +287,18 @@
             <div class="row">
                 <label><span class="color-dot" id="dot-warning"></span>Attention (< 72h)</label>
                 <select id="color-warning" class="color-select">
+                    <option value="red_dark">🔴 Rouge vif</option>
                     <option value="red">🔴 Rouge</option>
+                    <option value="orange_dark">🟠 Orange vif</option>
                     <option value="orange">🟠 Orange</option>
-                    <option value="yellow" selected>🟡 Jaune</option>
+                    <option value="yellow_dark" selected>🟡 Jaune vif</option>
+                    <option value="yellow">🟡 Jaune</option>
+                    <option value="pink_dark">💗 Rose vif</option>
+                    <option value="pink">💗 Rose</option>
+                    <option value="purple_dark">🟣 Violet vif</option>
+                    <option value="purple">🟣 Violet</option>
                     <option value="blue">🔵 Bleu</option>
                     <option value="green">🟢 Vert</option>
-                    <option value="purple">🟣 Violet</option>
-                    <option value="pink">💗 Rose</option>
                     <option value="sky">🩵 Cyan</option>
                 </select>
             </div>
@@ -285,14 +306,22 @@
             <div class="row">
                 <label><span class="color-dot" id="dot-normal"></span>Normal</label>
                 <select id="color-normal" class="color-select">
+                    <option value="red_dark">🔴 Rouge vif</option>
                     <option value="red">🔴 Rouge</option>
+                    <option value="orange_dark">🟠 Orange vif</option>
                     <option value="orange">🟠 Orange</option>
+                    <option value="yellow_dark">🟡 Jaune vif</option>
                     <option value="yellow">🟡 Jaune</option>
-                    <option value="blue" selected>🔵 Bleu</option>
-                    <option value="green">🟢 Vert</option>
-                    <option value="purple">🟣 Violet</option>
+                    <option value="pink_dark">💗 Rose vif</option>
                     <option value="pink">💗 Rose</option>
+                    <option value="purple_dark">🟣 Violet vif</option>
+                    <option value="purple">🟣 Violet</option>
+                    <option value="blue" selected>🔵 Bleu</option>
+                    <option value="blue_dark">🔵 Bleu vif</option>
+                    <option value="green">🟢 Vert</option>
+                    <option value="green_dark">🟢 Vert vif</option>
                     <option value="sky">🩵 Cyan</option>
+                    <option value="lime">💚 Citron</option>
                 </select>
             </div>
         </div>
@@ -348,12 +377,13 @@
         
         var DEFAULT_SETTINGS = {
             thresholds: { urgent: 24, warning: 72 },
-            colors: { overdue: 'red', urgent: 'orange', warning: 'yellow', normal: 'blue' },
+            colors: { overdue: 'red_dark', urgent: 'orange_dark', warning: 'yellow_dark', normal: 'blue' },
             format: 'short',
-            overdueAlert: { enabled: true, text: '⚠️ EN RETARD', color: 'red' }
+            overdueAlert: { enabled: true, text: '⚠️ EN RETARD', color: 'red_dark' }
         };
         
         var colorCSS = {
+            // Couleurs de base
             red: '#f87168',
             orange: '#faa53d',
             yellow: '#f5cd47',
@@ -361,7 +391,29 @@
             green: '#4bce97',
             purple: '#9f8fef',
             pink: '#e774bb',
-            sky: '#6cc3e0'
+            sky: '#6cc3e0',
+            lime: '#4fd582',
+            black: '#626f86',
+            // Couleurs DARK (vives) - comme les étiquettes Trello
+            red_dark: '#cf513d',
+            orange_dark: '#e79217',
+            yellow_dark: '#e7c60b',
+            blue_dark: '#036aa7',
+            green_dark: '#59ac44',
+            purple_dark: '#a86cc1',
+            pink_dark: '#e668af',
+            sky_dark: '#03aecc',
+            lime_dark: '#4fd582',
+            black_dark: '#081f42',
+            // Couleurs LIGHT (pastel)
+            red_light: '#f5d3ce',
+            orange_light: '#fce8d4',
+            yellow_light: '#faf3c0',
+            blue_light: '#d4e5f7',
+            green_light: '#d4f7e0',
+            purple_light: '#e8dff5',
+            pink_light: '#f7ddef',
+            sky_light: '#d4f1f7'
         };
         
         function updateColorDots() {
