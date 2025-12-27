@@ -7,14 +7,10 @@ var DEFAULT_SETTINGS = {
         urgent: 24,
         warning: 72
     },
-    // Couleurs disponibles: 
-    // Base: red, orange, yellow, green, blue, purple, pink, sky, lime, black, light-gray
-    // Variantes (non documentées mais peuvent fonctionner): 
-    // red_dark, red_light, orange_dark, orange_light, etc.
     colors: {
-        overdue: 'red_dark',      // Rouge vif (comme les étiquettes)
-        urgent: 'orange_dark',    // Orange vif
-        warning: 'yellow_dark',   // Jaune vif
+        overdue: 'red',
+        urgent: 'orange',
+        warning: 'yellow',
         normal: 'blue'
     },
     texts: {
@@ -36,7 +32,7 @@ var DEFAULT_SETTINGS = {
     overdueAlert: {
         enabled: true,
         text: '⚠️ EN RETARD',
-        color: 'red_dark'    // Rouge vif
+        color: 'red'
     }
 };
 
